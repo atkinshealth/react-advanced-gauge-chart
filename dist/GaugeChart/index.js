@@ -168,7 +168,9 @@ GaugeChart.propTypes = {
   animate: _propTypes.default.bool,
   formatTextValue: _propTypes.default.func,
   fontSize: _propTypes.default.string,
-  animateDuration: _propTypes.default.number
+  animateDuration: _propTypes.default.number,
+  diffColor: _propTypes.default.func,
+  diff: _propTypes.default.number
 }; // This function update arc's datas when component is mounting or when one of arc's props is updated
 
 var setArcData = function setArcData(props, nbArcsToDisplay, colorArray, arcData) {
@@ -296,14 +298,14 @@ var addText = function addText(percentage, props, outerRadius, width, g) {
   var textPadding = 20;
   var text = "";
 
-  if (!props.previousValue) {
+  if (!props.diff) {
     text = formatTextValue ? formatTextValue(floatingNumber(percentage)) : floatingNumber(percentage) + '%';
     g.current.append('g').attr('class', 'text-group').attr('transform', "translate(".concat(outerRadius.current, ", ").concat(outerRadius.current / 2 + textPadding, ")")).append('text').text(text) // this computation avoid text overflow. When formatted value is over 10 characters, we should reduce font size
     .style('font-size', function () {
       return "".concat(width.current / 11 / (text.length > 10 ? text.length / 10 : 1), "px");
     }).style('fill', props.textColor).attr('class', 'percent-text');
   } else {
-    var diff = parseFloat(floatingNumber(percentage) - floatingNumber(props.previousValue)).toFixed(2);
+    var diff = props.diff.toFixed(2);
     text = floatingNumber(percentage) + "%";
     var newElem = g.current.append('g').attr('class', 'text-group');
     newElem.append('text').text(text) // this computation avoid text overflow. When formatted value is over 10 characters, we should reduce font size
