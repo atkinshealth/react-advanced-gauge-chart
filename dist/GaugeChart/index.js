@@ -1,5 +1,7 @@
 "use strict";
 
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -17,9 +19,9 @@ var _customHooks = _interopRequireDefault(require("./customHooks"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; if (obj != null) { var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 /*
 GaugeChart creates a gauge chart using D3
@@ -116,7 +118,7 @@ var GaugeChart = function GaugeChart(props) {
   var id = props.id,
       style = props.style,
       className = props.className;
-  return _react.default.createElement("div", {
+  return /*#__PURE__*/_react.default.createElement("div", {
     id: id,
     className: className,
     style: style
@@ -317,32 +319,28 @@ var addText = function addText(percentage, props, outerRadius, width, g) {
     }
 
     if (icon !== '') {
+      var calcColor = function calcColor() {
+        if (props.diffColor) {
+          return props.diffColor(diff);
+        }
+
+        var newColor = props.textColor;
+
+        if (diff < 0) {
+          return "red";
+        } else if (diff > 0) {
+          return "green";
+        }
+
+        return newColor;
+      };
+
       newElem.append("text").attr('font-family', 'FontAwesome').attr("class", "fa").attr('transform', "translate(".concat(outerRadius.current + width.current / 11 / (text.length > 10 ? text.length / 10 : 1), ", ").concat(outerRadius.current / 2 + textPadding, ")")).attr("font-size", function () {
         return "".concat(width.current / 11 / (text.length > 3 ? text.length / 2 : 2), "px");
-      }).attr("fill", function () {
-        var newColor = props.textColor;
-
-        if (diff < 0) {
-          return "red";
-        } else if (diff > 0) {
-          return "green";
-        }
-
-        return newColor;
-      }).text(icon);
+      }).attr("fill", calcColor).text(icon);
       newElem.append('text').text(Math.abs(diff)).attr('transform', "translate(".concat(outerRadius.current + width.current / 11 / (text.length > 10 ? text.length / 10 : 1) + width.current / 11 / (text.length > 10 ? text.length / 10 * 2 : 1 * 2), ", ").concat(outerRadius.current / 2 + textPadding, ")")).style('font-size', function () {
         return "".concat(width.current / 11 / (text.length > 3 ? text.length / 2 : 2), "px");
-      }).style('fill', function () {
-        var newColor = props.textColor;
-
-        if (diff < 0) {
-          return "red";
-        } else if (diff > 0) {
-          return "green";
-        }
-
-        return newColor;
-      });
+      }).style('fill', calcColor);
     }
   }
 };

@@ -99,7 +99,7 @@ const GaugeChart = (props) => {
     });
     renderChart(resize, prevProps, width, margin, height, outerRadius, g, doughnut, arcChart, needle, pieChart, svg, props, container, arcData);
   }
-    
+
   const { id, style, className } = props;
   return <div id={id} className={className} style={style} />;
 }
@@ -146,6 +146,7 @@ GaugeChart.propTypes = {
   formatTextValue: PropTypes.func,
   fontSize: PropTypes.string,
   animateDuration: PropTypes.number,
+  diffColor: PropTypes.func
 }
 
  // This function update arc's datas when component is mounting or when one of arc's props is updated
@@ -321,6 +322,18 @@ var addText = function addText(percentage, props, outerRadius, width, g) {
       icon = '\uf062'
     }
     if ( icon !== '') {
+      var calcColor = function() {
+        if (props.diffColor) {
+          return props.diffColor(diff)
+        }
+        var newColor = props.textColor
+        if (diff < 0) {
+          return "red"
+        } else if ( diff > 0) {
+          return "green"
+        }
+        return newColor
+      };
       newElem.append("text")
         .attr('font-family', 'FontAwesome')
         .attr("class","fa")
@@ -328,29 +341,14 @@ var addText = function addText(percentage, props, outerRadius, width, g) {
         .attr("font-size", function () {
           return "".concat(width.current / 11 / (text.length > 3 ? text.length / 2 : 2), "px");
         })
-        .attr("fill", function() {
-          var newColor = props.textColor
-          if (diff < 0) {
-            return "red"
-          } else if ( diff > 0) {
-            return "green"
-          }
-          return newColor
-        })
+        .attr("fill", calcColor)
         .text(icon);
       newElem.append('text').text(Math.abs(diff))
         .attr('transform', "translate(".concat(outerRadius.current + (width.current / 11 / (text.length > 10 ? text.length / 10 : 1)) + (width.current / 11 / (text.length > 10 ? text.length / 10*2 : 1*2)), ", ").concat(outerRadius.current / 2 + textPadding, ")"))
         .style('font-size', function () {
           return "".concat(width.current / 11 / (text.length > 3 ? text.length / 2 : 2), "px");
-        }).style('fill', function() {
-          var newColor = props.textColor
-          if (diff < 0) {
-            return "red"
-          } else if ( diff > 0) {
-            return "green"
-          }
-          return newColor
-        });
+        })
+        .style('fill', calcColor);
     }
   }
 };
