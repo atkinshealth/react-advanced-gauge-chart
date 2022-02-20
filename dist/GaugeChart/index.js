@@ -298,17 +298,15 @@ var addText = function addText(percentage, props, outerRadius, width, g) {
   var formatTextValue = props.formatTextValue;
   var formatDiffValue = props.formatDiffValue;
   var textPadding = 20;
-  var text = "";
+  var text = formatTextValue ? formatTextValue(floatingNumber(percentage)) : floatingNumber(percentage) + '%';
 
   if (!props.diff) {
-    text = formatTextValue ? formatTextValue(floatingNumber(percentage)) : floatingNumber(percentage) + '%';
     g.current.append('g').attr('class', 'text-group').attr('transform', "translate(".concat(outerRadius.current, ", ").concat(outerRadius.current / 2 + textPadding, ")")).append('text').text(text) // this computation avoid text overflow. When formatted value is over 10 characters, we should reduce font size
     .style('font-size', function () {
       return "".concat(width.current / 11 / (text.length > 10 ? text.length / 10 : 1), "px");
     }).style('fill', props.textColor).attr('class', 'percent-text');
   } else {
     var diff = props.diff;
-    text = floatingNumber(percentage) + "%";
     var newElem = g.current.append('g').attr('class', 'text-group');
     newElem.append('text').text(text) // this computation avoid text overflow. When formatted value is over 10 characters, we should reduce font size
     .attr('transform', "translate(".concat(outerRadius.current, ", ").concat(outerRadius.current / 2 + textPadding, ")")).style('font-size', function () {
