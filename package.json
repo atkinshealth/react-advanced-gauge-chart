@@ -59,7 +59,7 @@
     "rimraf": "^2.7.1"
   },
   "peerDependencies": {
-    "react": "^16.8.2",
-    "react-dom": "^16.8.2"
+    "react": "^16.8.2 | ^17",
+    "react-dom": "^16.8.2 | ^17"
   }
 }
