@@ -365,14 +365,17 @@ const calculateRadius = (width, height, outerRadius, margin, g) => {
   //Only needs to be half of the width, because the width needs to be 2 * radius
   //For the whole arc to fit
 
+  console.log(height, width.current)
   //First check if it is the width or the height that is the "limiting" dimension
-  if (width.current < 2 * height.current) {
+  if (width.current < 2 * height) {
     //Then the width limits the size of the chart
     //Set the radius to the width - the horizontal margins
-    outerRadius.current = (width.current - margin.current.left - margin.current.right) / 2
+    outerRadius.current = width.current / 2;
   } else {
-    outerRadius.current = height.current - margin.current.top - margin.current.bottom
+    outerRadius.current = height.current;
   }
+
+  console.log(height.current, width.current, outerRadius.current);
   centerGraph(width, g, outerRadius, margin)
 }
 
@@ -390,12 +393,12 @@ const updateDimensions = (props, container, margin, width, height) => {
       divHeight = divDimensions.height;
 
   //Set the new width and horizontal margins
-  margin.current.left = divWidth * marginInPercent
-  margin.current.right = divWidth * marginInPercent
-  width.current = divWidth - margin.current.left - margin.current.right
+  margin.current.left = 0
+  margin.current.right = 0
+  width.current = divWidth
 
   margin.current.top = divHeight * marginInPercent
   margin.current.bottom = divHeight * marginInPercent
-  height.current = width.current / 2 - margin.current.top - margin.current.bottom
-  //height.current = divHeight - margin.current.top - margin.current.bottom;
+  // height.current = divHeight
+  height.current = divHeight - margin.current.top - margin.current.bottom;
 }
